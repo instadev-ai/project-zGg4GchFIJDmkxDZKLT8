@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -6,7 +6,7 @@ import SkillsSection from '@/components/sections/SkillsSection'
 
 const Index = () => {
   const [activeFilter, setActiveFilter] = useState("all");
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
