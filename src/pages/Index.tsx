@@ -1,36 +1,29 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { useState, useRef } from "react";
+import { useState } from 'react'
+import { motion, useScroll, useTransform } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import SkillsSection from '@/components/sections/SkillsSection'
 
 const Index = () => {
   const [activeFilter, setActiveFilter] = useState("all");
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"]
+    offset: ["start start", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.5, 0]);
+  const y = useTransform(scrollY, [0, 1000], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 200], [1, 0]);
 
   const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
+    initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, ease: "easeOut" }
-  };
-
-  const stagger = {
-    animate: {
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+    transition: { duration: 0.5 }
   };
 
   const projects = [
     {
-      title: "E-Commerce Redesign",
+      title: "E-commerce Redesign",
       category: "ux",
       image: "/placeholder.svg",
       description: "Complete user experience overhaul for an e-commerce platform",
@@ -64,9 +57,12 @@ const Index = () => {
       {/* Hero Section */}
       <motion.section 
         className="min-h-screen flex items-center justify-center relative px-4 py-20 overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        initial="initial"
+        animate="animate"
+        variants={{
+          initial: { opacity: 0 },
+          animate: { opacity: 1 }
+        }}
       >
         <motion.div 
           className="absolute inset-0 -z-10"
@@ -86,9 +82,11 @@ const Index = () => {
         <div className="container relative z-10 max-w-4xl">
           <motion.div 
             className="text-center space-y-8"
-            variants={stagger}
             initial="initial"
             animate="animate"
+            variants={{
+              animate: { transition: { staggerChildren: 0.1 } }
+            }}
           >
             <motion.div variants={fadeInUp} className="space-y-4">
               <motion.span 
@@ -116,7 +114,7 @@ const Index = () => {
               Crafting beautiful digital experiences through thoughtful design and creative innovation
             </motion.p>
             
-            <motion.div
+            <motion.div 
               className="flex items-center justify-center gap-4"
               variants={fadeInUp}
             >
@@ -145,10 +143,10 @@ const Index = () => {
         <div className="container relative">
           <motion.div 
             className="text-center space-y-4 mb-16"
-            variants={fadeInUp}
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
+            variants={fadeInUp}
           >
             <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400">
               Selected Works
@@ -158,15 +156,9 @@ const Index = () => {
             </p>
           </motion.div>
 
-          <motion.div 
-            className="flex justify-center gap-4 mb-16"
-            variants={fadeInUp}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-          >
+          <div className="flex justify-center gap-4 mb-12">
             {["all", "ux", "ui"].map((filter) => (
-              <Button 
+              <Button
                 key={filter}
                 variant={activeFilter === filter ? "default" : "outline"}
                 onClick={() => setActiveFilter(filter)}
@@ -179,11 +171,11 @@ const Index = () => {
                 {filter === "all" ? "All Projects" : `${filter.toUpperCase()} Design`}
               </Button>
             ))}
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects
-              .filter(project => activeFilter === "all" || project.category === activeFilter)
+              .filter((project) => activeFilter === "all" || project.category === activeFilter)
               .map((project, index) => (
                 <motion.div
                   key={project.title}
@@ -220,6 +212,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Skills Section */}
+      <SkillsSection />
 
       {/* Contact Section */}
       <motion.section 
